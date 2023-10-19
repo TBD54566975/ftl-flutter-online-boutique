@@ -14,14 +14,18 @@ dependencies:
   auto_route: ^7.8.4
   flutter_hooks: ^0.20.3
   hooks_riverpod: ^2.4.4
+  http: ^1.1.0
+  intl: ^0.18.1
+  openapi_generator_annotations: ^4.13.1
   riverpod: ^2.4.4
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
   auto_route_generator: ^7.3.2
   build_runner: ^2.4.6
   flutter_lints: ^2.0.0
+  openapi_generator: ^4.13.1
 
 flutter:
   uses-material-design: true
