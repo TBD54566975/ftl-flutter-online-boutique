@@ -74,7 +74,6 @@ class ProductPage extends HookConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     isAdding.value = true;
-                    ref.read(cartCountProvider.notifier).state++;
                     CartClient(ftlClient: FTLHttpClient.instance)
                         .addItem(AddItemRequest(
                       userID: 'a',
@@ -83,6 +82,7 @@ class ProductPage extends HookConsumerWidget {
                         .then((value) {
                       isAdding.value = false;
                     });
+                    refreshCartCount(ref);
                   },
                   child: const Text('Add to Cart'),
                 ),

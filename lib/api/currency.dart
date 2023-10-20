@@ -106,7 +106,7 @@ class CurrencyClient {
 
 
   Future<GetSupportedCurrenciesResponse> getSupportedCurrencies(GetSupportedCurrenciesRequest request) async {
-    final response = await ftlClient.get('/currency/supported');
+    final response = await ftlClient.get('/currency/supported', request: request.toMap());
     if (response.statusCode == 200) {
       return GetSupportedCurrenciesResponse.fromJson(response.body);
     } else {
@@ -115,7 +115,7 @@ class CurrencyClient {
   }
 
   Future<Money> convert(ConvertRequest request) async {
-    final response = await ftlClient.post('/currency/convert', body: request.toMap());
+    final response = await ftlClient.post('/currency/convert', request: request.toMap());
     if (response.statusCode == 200) {
       return Money.fromJson(response.body);
     } else {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class FTLHttpClient {
@@ -18,15 +19,29 @@ class FTLHttpClient {
     return _instance!;
   }
 
-  Future<http.Response> get(String path, {Map<String, String>? headers}) {
-    return httpClient.get(Uri.parse('$baseUrl$path'), headers: headers);
+  Future<http.Response> get(
+    String path, {
+    Map<String, dynamic>? request,
+    Map<String, String>? headers,
+  }) {
+    Uri uri;
+    if (request == null || request.isEmpty) {
+      uri = Uri.http("localhost:8892", '/ingress$path');
+    } else {
+      uri = Uri.http("localhost:8892", '/ingress$path', request);
+    }
+    print(uri);
+    return httpClient.get(uri, headers: headers);
   }
 
-  Future<http.Response> post(String path,
-      {Object? body, Map<String, String>? headers}) {
+  Future<http.Response> post(
+    String path, {
+    Map<String, dynamic>? request,
+    Map<String, String>? headers,
+  }) {
     return httpClient.post(
-      Uri.parse('$baseUrl$path'),
-      body: body,
+      Uri.http(baseUrl, '/ingress$path'),
+      body: json.encode(request),
       headers: headers,
     );
   }

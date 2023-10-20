@@ -184,7 +184,7 @@ class ProductcatalogClient {
 
 
   Future<ListResponse> list(ListRequest request) async {
-    final response = await ftlClient.get('/productcatalog');
+    final response = await ftlClient.get('/productcatalog', request: request.toMap());
     if (response.statusCode == 200) {
       return ListResponse.fromJson(response.body);
     } else {
@@ -193,7 +193,7 @@ class ProductcatalogClient {
   }
 
   Future<Product> get(GetRequest request) async {
-    final response = await ftlClient.get('/productcatalog/id');
+    final response = await ftlClient.get('/productcatalog/id', request: request.toMap());
     if (response.statusCode == 200) {
       return Product.fromJson(response.body);
     } else {

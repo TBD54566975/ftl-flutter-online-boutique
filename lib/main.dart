@@ -9,9 +9,7 @@ import 'package:openapi_generator_annotations/openapi_generator_annotations.dart
 import 'package:http/http.dart' as http;
 
 void main() {
-  final host = Platform.isAndroid
-      ? 'http://10.0.2.2/ingress'
-      : 'http://localhost:8892/ingress';
+  final host = Platform.isAndroid ? '10.0.2.2' : 'localhost:8892';
 
   FTLHttpClient.initialize(
     baseUrl: host,

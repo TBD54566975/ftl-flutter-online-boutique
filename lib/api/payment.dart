@@ -118,7 +118,7 @@ class PaymentClient {
 
 
   Future<ChargeResponse> charge(ChargeRequest request) async {
-    final response = await ftlClient.post('/payment/charge', body: request.toMap());
+    final response = await ftlClient.post('/payment/charge', request: request.toMap());
     if (response.statusCode == 200) {
       return ChargeResponse.fromJson(response.body);
     } else {

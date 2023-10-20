@@ -223,7 +223,7 @@ class CheckoutClient {
 
 
   Future<Order> placeOrder(PlaceOrderRequest request) async {
-    final response = await ftlClient.post('/checkout', body: request.toMap());
+    final response = await ftlClient.post('/checkout', request: request.toMap());
     if (response.statusCode == 200) {
       return Order.fromJson(response.body);
     } else {

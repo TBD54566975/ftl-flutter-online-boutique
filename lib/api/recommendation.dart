@@ -59,7 +59,7 @@ class RecommendationClient {
 
 
   Future<ListResponse> list(ListRequest request) async {
-    final response = await ftlClient.get('/recommendation');
+    final response = await ftlClient.get('/recommendation', request: request.toMap());
     if (response.statusCode == 200) {
       return ListResponse.fromJson(response.body);
     } else {

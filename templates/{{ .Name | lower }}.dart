@@ -77,7 +77,7 @@ class {{ .Name | camel }}Client {
 {{- range .Metadata }}
 {{ if eq "MetadataIngress" (. | typename) }}
   Future<{{ $verb.Response }}> {{ $verb.Name }}({{ $verb.Request }} request) async {
-    final response = await ftlClient.{{ .Method | lower }}('{{ .Path }}'{{ if eq .Method "POST" }}, body: request.toMap(){{ end }});
+    final response = await ftlClient.{{ .Method | lower }}('{{ .Path }}', request: request.toMap());
     if (response.statusCode == 200) {
       return {{ $verb.Response }}.fromJson(response.body);
     } else {

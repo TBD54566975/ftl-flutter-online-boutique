@@ -146,7 +146,7 @@ class ShippingClient {
 
 
   Future<Money> getQuote(ShippingRequest request) async {
-    final response = await ftlClient.post('/shipping/quote', body: request.toMap());
+    final response = await ftlClient.post('/shipping/quote', request: request.toMap());
     if (response.statusCode == 200) {
       return Money.fromJson(response.body);
     } else {
@@ -155,7 +155,7 @@ class ShippingClient {
   }
 
   Future<ShipOrderResponse> shipOrder(ShippingRequest request) async {
-    final response = await ftlClient.post('/shipping/ship', body: request.toMap());
+    final response = await ftlClient.post('/shipping/ship', request: request.toMap());
     if (response.statusCode == 200) {
       return ShipOrderResponse.fromJson(response.body);
     } else {

@@ -81,7 +81,7 @@ class AdClient {
 
 
   Future<AdResponse> get(AdRequest request) async {
-    final response = await ftlClient.get('/ad');
+    final response = await ftlClient.get('/ad', request: request.toMap());
     if (response.statusCode == 200) {
       return AdResponse.fromJson(response.body);
     } else {
