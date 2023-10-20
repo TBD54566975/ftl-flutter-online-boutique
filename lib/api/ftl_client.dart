@@ -30,7 +30,6 @@ class FTLHttpClient {
     } else {
       uri = Uri.http("localhost:8892", '/ingress$path', request);
     }
-    print(uri);
     return httpClient.get(uri, headers: headers);
   }
 

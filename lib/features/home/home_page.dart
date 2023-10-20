@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:online_boutique/api/ftl_client.dart';
 import 'package:online_boutique/api/productcatalog.dart';
 import 'package:online_boutique/features/cart/cart_button.dart';
 import 'package:online_boutique/features/products/product_page.dart';
+import 'package:online_boutique/features/products/products_providers.dart';
 import 'package:online_boutique/utils/money_utils.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -17,12 +17,11 @@ class HomePage extends HookConsumerWidget {
 
     useEffect(() {
       isLoading.value = true;
-      ProductcatalogClient(ftlClient: FTLHttpClient.instance)
-          .list(ListRequest())
-          .then((value) {
-        products.value = value.products;
+      refreshProducts(ref).then((value) {
+        products.value = value;
         isLoading.value = false;
       });
+
       return null;
     }, []);
 
