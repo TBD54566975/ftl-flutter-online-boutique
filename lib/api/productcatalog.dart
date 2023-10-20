@@ -32,9 +32,9 @@ class Money {
 
   Map<String, dynamic> toMap() {
     return {
-      'currencyCode': currencyCode,
-      'units': units,
-      'nanos': nanos,
+      'currencyCode': ((dynamic v) =>v)(currencyCode),
+      'units': ((dynamic v) =>v)(units),
+      'nanos': ((dynamic v) =>v)(nanos),
     };
   }
 
@@ -63,12 +63,12 @@ class Product {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'picture': picture,
-      'priceUSD': priceUSD,
-      'categories': categories,
+      'id': ((dynamic v) =>v)(id),
+      'name': ((dynamic v) =>v)(name),
+      'description': ((dynamic v) =>v)(description),
+      'picture': ((dynamic v) =>v)(picture),
+      'priceUSD': ((dynamic v) =>v.toMap())(priceUSD),
+      'categories': ((dynamic v) =>v.map((v) => v).cast<String>().toList())(categories),
     };
   }
 
@@ -95,7 +95,7 @@ class ListResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'products': products,
+      'products': ((dynamic v) =>v.map((v) => Product.fromMap(v)).cast<Product>().toList())(products),
     };
   }
 
@@ -117,7 +117,7 @@ class GetRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': ((dynamic v) =>v)(id),
     };
   }
 
@@ -139,7 +139,7 @@ class SearchRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'query': query,
+      'query': ((dynamic v) =>v)(query),
     };
   }
 
@@ -161,7 +161,7 @@ class SearchResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'results': results,
+      'results': ((dynamic v) =>v.map((v) => Product.fromMap(v)).cast<Product>().toList())(results),
     };
   }
 
@@ -184,7 +184,7 @@ class ProductcatalogClient {
 
 
   Future<ListResponse> list(ListRequest request) async {
-    final response = await ftlClient.get('/productcatalog');
+    final response = await ftlClient.get('/productcatalog', request: request.toMap());
     if (response.statusCode == 200) {
       return ListResponse.fromJson(response.body);
     } else {
@@ -193,7 +193,7 @@ class ProductcatalogClient {
   }
 
   Future<Product> get(GetRequest request) async {
-    final response = await ftlClient.get('/productcatalog/id');
+    final response = await ftlClient.get('/productcatalog/id', request: request.toMap());
     if (response.statusCode == 200) {
       return Product.fromJson(response.body);
     } else {

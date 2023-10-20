@@ -15,11 +15,11 @@ class Address {
 
   Map<String, dynamic> toMap() {
     return {
-      'streetAddress': streetAddress,
-      'city': city,
-      'state': state,
-      'country': country,
-      'zipCode': zipCode,
+      'streetAddress': ((dynamic v) =>v)(streetAddress),
+      'city': ((dynamic v) =>v)(city),
+      'state': ((dynamic v) =>v)(state),
+      'country': ((dynamic v) =>v)(country),
+      'zipCode': ((dynamic v) =>v)(zipCode),
     };
   }
 
@@ -48,10 +48,10 @@ class CreditCardInfo {
 
   Map<String, dynamic> toMap() {
     return {
-      'number': number,
-      'cVV': cVV,
-      'expirationYear': expirationYear,
-      'expirationMonth': expirationMonth,
+      'number': ((dynamic v) =>v)(number),
+      'cVV': ((dynamic v) =>v)(cVV),
+      'expirationYear': ((dynamic v) =>v)(expirationYear),
+      'expirationMonth': ((dynamic v) =>v)(expirationMonth),
     };
   }
 
@@ -80,11 +80,11 @@ class PlaceOrderRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
-      'userCurrency': userCurrency,
-      'address': address,
-      'email': email,
-      'creditCard': creditCard,
+      'userID': ((dynamic v) =>v)(userID),
+      'userCurrency': ((dynamic v) =>v)(userCurrency),
+      'address': ((dynamic v) =>v.toMap())(address),
+      'email': ((dynamic v) =>v)(email),
+      'creditCard': ((dynamic v) =>v.toMap())(creditCard),
     };
   }
 
@@ -112,9 +112,9 @@ class Money {
 
   Map<String, dynamic> toMap() {
     return {
-      'currencyCode': currencyCode,
-      'units': units,
-      'nanos': nanos,
+      'currencyCode': ((dynamic v) =>v)(currencyCode),
+      'units': ((dynamic v) =>v)(units),
+      'nanos': ((dynamic v) =>v)(nanos),
     };
   }
 
@@ -139,8 +139,8 @@ class Item {
 
   Map<String, dynamic> toMap() {
     return {
-      'productID': productID,
-      'quantity': quantity,
+      'productID': ((dynamic v) =>v)(productID),
+      'quantity': ((dynamic v) =>v)(quantity),
     };
   }
 
@@ -164,8 +164,8 @@ class OrderItem {
 
   Map<String, dynamic> toMap() {
     return {
-      'item': item,
-      'cost': cost,
+      'item': ((dynamic v) =>v.toMap())(item),
+      'cost': ((dynamic v) =>v.toMap())(cost),
     };
   }
 
@@ -192,11 +192,11 @@ class Order {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'shippingTrackingID': shippingTrackingID,
-      'shippingCost': shippingCost,
-      'shippingAddress': shippingAddress,
-      'items': items,
+      'id': ((dynamic v) =>v)(id),
+      'shippingTrackingID': ((dynamic v) =>v)(shippingTrackingID),
+      'shippingCost': ((dynamic v) =>v.toMap())(shippingCost),
+      'shippingAddress': ((dynamic v) =>v.toMap())(shippingAddress),
+      'items': ((dynamic v) =>v.map((v) => OrderItem.fromMap(v)).cast<OrderItem>().toList())(items),
     };
   }
 
@@ -223,7 +223,7 @@ class CheckoutClient {
 
 
   Future<Order> placeOrder(PlaceOrderRequest request) async {
-    final response = await ftlClient.post('/checkout');
+    final response = await ftlClient.post('/checkout', request: request.toMap());
     if (response.statusCode == 200) {
       return Order.fromJson(response.body);
     } else {

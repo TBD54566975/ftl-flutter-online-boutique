@@ -15,11 +15,11 @@ class Address {
 
   Map<String, dynamic> toMap() {
     return {
-      'streetAddress': streetAddress,
-      'city': city,
-      'state': state,
-      'country': country,
-      'zipCode': zipCode,
+      'streetAddress': ((dynamic v) =>v)(streetAddress),
+      'city': ((dynamic v) =>v)(city),
+      'state': ((dynamic v) =>v)(state),
+      'country': ((dynamic v) =>v)(country),
+      'zipCode': ((dynamic v) =>v)(zipCode),
     };
   }
 
@@ -46,8 +46,8 @@ class Item {
 
   Map<String, dynamic> toMap() {
     return {
-      'productID': productID,
-      'quantity': quantity,
+      'productID': ((dynamic v) =>v)(productID),
+      'quantity': ((dynamic v) =>v)(quantity),
     };
   }
 
@@ -71,8 +71,8 @@ class ShippingRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'address': address,
-      'items': items,
+      'address': ((dynamic v) =>v.toMap())(address),
+      'items': ((dynamic v) =>v.map((v) => Item.fromMap(v)).cast<Item>().toList())(items),
     };
   }
 
@@ -97,9 +97,9 @@ class Money {
 
   Map<String, dynamic> toMap() {
     return {
-      'currencyCode': currencyCode,
-      'units': units,
-      'nanos': nanos,
+      'currencyCode': ((dynamic v) =>v)(currencyCode),
+      'units': ((dynamic v) =>v)(units),
+      'nanos': ((dynamic v) =>v)(nanos),
     };
   }
 
@@ -123,7 +123,7 @@ class ShipOrderResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': ((dynamic v) =>v)(id),
     };
   }
 
@@ -146,7 +146,7 @@ class ShippingClient {
 
 
   Future<Money> getQuote(ShippingRequest request) async {
-    final response = await ftlClient.post('/shipping/quote');
+    final response = await ftlClient.post('/shipping/quote', request: request.toMap());
     if (response.statusCode == 200) {
       return Money.fromJson(response.body);
     } else {
@@ -155,7 +155,7 @@ class ShippingClient {
   }
 
   Future<ShipOrderResponse> shipOrder(ShippingRequest request) async {
-    final response = await ftlClient.post('/shipping/ship');
+    final response = await ftlClient.post('/shipping/ship', request: request.toMap());
     if (response.statusCode == 200) {
       return ShipOrderResponse.fromJson(response.body);
     } else {

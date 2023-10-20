@@ -13,9 +13,9 @@ class Money {
 
   Map<String, dynamic> toMap() {
     return {
-      'currencyCode': currencyCode,
-      'units': units,
-      'nanos': nanos,
+      'currencyCode': ((dynamic v) =>v)(currencyCode),
+      'units': ((dynamic v) =>v)(units),
+      'nanos': ((dynamic v) =>v)(nanos),
     };
   }
 
@@ -42,10 +42,10 @@ class CreditCardInfo {
 
   Map<String, dynamic> toMap() {
     return {
-      'number': number,
-      'cVV': cVV,
-      'expirationYear': expirationYear,
-      'expirationMonth': expirationMonth,
+      'number': ((dynamic v) =>v)(number),
+      'cVV': ((dynamic v) =>v)(cVV),
+      'expirationYear': ((dynamic v) =>v)(expirationYear),
+      'expirationMonth': ((dynamic v) =>v)(expirationMonth),
     };
   }
 
@@ -71,8 +71,8 @@ class ChargeRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'amount': amount,
-      'creditCard': creditCard,
+      'amount': ((dynamic v) =>v.toMap())(amount),
+      'creditCard': ((dynamic v) =>v.toMap())(creditCard),
     };
   }
 
@@ -95,7 +95,7 @@ class ChargeResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'transactionID': transactionID,
+      'transactionID': ((dynamic v) =>v)(transactionID),
     };
   }
 
@@ -118,7 +118,7 @@ class PaymentClient {
 
 
   Future<ChargeResponse> charge(ChargeRequest request) async {
-    final response = await ftlClient.post('/payment/charge');
+    final response = await ftlClient.post('/payment/charge', request: request.toMap());
     if (response.statusCode == 200) {
       return ChargeResponse.fromJson(response.body);
     } else {

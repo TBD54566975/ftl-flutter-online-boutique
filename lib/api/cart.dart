@@ -12,8 +12,8 @@ class Item {
 
   Map<String, dynamic> toMap() {
     return {
-      'productID': productID,
-      'quantity': quantity,
+      'productID': ((dynamic v) =>v)(productID),
+      'quantity': ((dynamic v) =>v)(quantity),
     };
   }
 
@@ -37,8 +37,8 @@ class AddItemRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
-      'item': item,
+      'userID': ((dynamic v) =>v)(userID),
+      'item': ((dynamic v) =>v.toMap())(item),
     };
   }
 
@@ -80,7 +80,7 @@ class GetCartRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
+      'userID': ((dynamic v) =>v)(userID),
     };
   }
 
@@ -103,8 +103,8 @@ class Cart {
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
-      'items': items,
+      'userID': ((dynamic v) =>v)(userID),
+      'items': ((dynamic v) =>v.map((v) => Item.fromMap(v)).cast<Item>().toList())(items),
     };
   }
 
@@ -127,7 +127,7 @@ class EmptyCartRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
+      'userID': ((dynamic v) =>v)(userID),
     };
   }
 
@@ -169,7 +169,7 @@ class CartClient {
 
 
   Future<AddItemResponse> addItem(AddItemRequest request) async {
-    final response = await ftlClient.post('/cart/add');
+    final response = await ftlClient.post('/cart/add', request: request.toMap());
     if (response.statusCode == 200) {
       return AddItemResponse.fromJson(response.body);
     } else {
@@ -178,7 +178,7 @@ class CartClient {
   }
 
   Future<Cart> getCart(GetCartRequest request) async {
-    final response = await ftlClient.get('/cart');
+    final response = await ftlClient.get('/cart', request: request.toMap());
     if (response.statusCode == 200) {
       return Cart.fromJson(response.body);
     } else {
@@ -187,7 +187,7 @@ class CartClient {
   }
 
   Future<EmptyCartResponse> emptyCart(EmptyCartRequest request) async {
-    final response = await ftlClient.post('/cart/empty');
+    final response = await ftlClient.post('/cart/empty', request: request.toMap());
     if (response.statusCode == 200) {
       return EmptyCartResponse.fromJson(response.body);
     } else {
