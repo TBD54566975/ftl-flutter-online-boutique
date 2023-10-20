@@ -11,7 +11,7 @@ class AdRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'contextKeys': contextKeys,
+      'contextKeys': ((dynamic v) =>v.map((v) => v).cast<String>().toList())(contextKeys),
     };
   }
 
@@ -34,8 +34,8 @@ class Ad {
 
   Map<String, dynamic> toMap() {
     return {
-      'redirectURL': redirectURL,
-      'text': text,
+      'redirectURL': ((dynamic v) =>v)(redirectURL),
+      'text': ((dynamic v) =>v)(text),
     };
   }
 
@@ -58,7 +58,7 @@ class AdResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'ads': ads,
+      'ads': ((dynamic v) =>v.map((v) => Ad.fromMap(v)).cast<Ad>().toList())(ads),
     };
   }
 

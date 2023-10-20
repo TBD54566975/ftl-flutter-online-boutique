@@ -30,7 +30,7 @@ class GetSupportedCurrenciesResponse {
 
   Map<String, dynamic> toMap() {
     return {
-      'currencyCodes': currencyCodes,
+      'currencyCodes': ((dynamic v) =>v.map((v) => v).cast<String>().toList())(currencyCodes),
     };
   }
 
@@ -54,9 +54,9 @@ class Money {
 
   Map<String, dynamic> toMap() {
     return {
-      'currencyCode': currencyCode,
-      'units': units,
-      'nanos': nanos,
+      'currencyCode': ((dynamic v) =>v)(currencyCode),
+      'units': ((dynamic v) =>v)(units),
+      'nanos': ((dynamic v) =>v)(nanos),
     };
   }
 
@@ -81,8 +81,8 @@ class ConvertRequest {
 
   Map<String, dynamic> toMap() {
     return {
-      'from': from,
-      'toCode': toCode,
+      'from': ((dynamic v) =>v.toMap())(from),
+      'toCode': ((dynamic v) =>v)(toCode),
     };
   }
 
@@ -115,7 +115,7 @@ class CurrencyClient {
   }
 
   Future<Money> convert(ConvertRequest request) async {
-    final response = await ftlClient.post('/currency/convert');
+    final response = await ftlClient.post('/currency/convert', body: request.toMap());
     if (response.statusCode == 200) {
       return Money.fromJson(response.body);
     } else {

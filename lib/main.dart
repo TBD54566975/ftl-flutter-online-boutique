@@ -13,8 +13,6 @@ void main() {
       ? 'http://10.0.2.2/ingress'
       : 'http://localhost:8892/ingress';
 
-  print(host);
-
   FTLHttpClient.initialize(
     baseUrl: host,
     httpClient: http.Client(),

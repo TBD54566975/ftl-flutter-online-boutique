@@ -25,6 +25,19 @@ v
 {{- end }}
 {{- end }}
 
+{{- define "serialize" -}}
+{{- $type := (. | typename ) -}}
+{{- if eq $type "Array" -}}
+v.map((v) => {{ template "deserialize" .Element }}).cast<{{ template "darttype" .Element }}>().toList()
+{{- else if eq $type "Map" -}}
+v.map((k, v) => MapEntry(k, {{ template "deserialize" .Value }})),
+{{- else if eq $type "DataRef" -}}
+v.toMap()
+{{- else -}}
+v
+{{- end }}
+{{- end }}
+
 {{ range .Data }}
 class {{ .Name | camel }} {
 {{- range .Fields }}
@@ -36,7 +49,7 @@ class {{ .Name | camel }} {
   Map<String, dynamic> toMap() {
     return {
 {{- range .Fields}}
-      '{{ .Name }}': {{ .Name }},
+      '{{ .Name }}': ((dynamic v) =>{{ template "serialize" .Type }})({{ .Name }}),
 {{- end }}
     };
   }
@@ -64,7 +77,7 @@ class {{ .Name | camel }}Client {
 {{- range .Metadata }}
 {{ if eq "MetadataIngress" (. | typename) }}
   Future<{{ $verb.Response }}> {{ $verb.Name }}({{ $verb.Request }} request) async {
-    final response = await ftlClient.{{ .Method | lower }}('{{ .Path }}');
+    final response = await ftlClient.{{ .Method | lower }}('{{ .Path }}'{{ if eq .Method "POST" }}, body: request.toMap(){{ end }});
     if (response.statusCode == 200) {
       return {{ $verb.Response }}.fromJson(response.body);
     } else {

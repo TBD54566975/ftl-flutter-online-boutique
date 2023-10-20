@@ -22,7 +22,12 @@ class FTLHttpClient {
     return httpClient.get(Uri.parse('$baseUrl$path'), headers: headers);
   }
 
-  Future<http.Response> post(String path, {Map<String, String>? headers}) {
-    return httpClient.post(Uri.parse('$baseUrl$path'), headers: headers);
+  Future<http.Response> post(String path,
+      {Object? body, Map<String, String>? headers}) {
+    return httpClient.post(
+      Uri.parse('$baseUrl$path'),
+      body: body,
+      headers: headers,
+    );
   }
 }

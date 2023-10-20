@@ -3,17 +3,19 @@ library ad;
 import 'dart:convert';
 import 'ftl_client.dart';
 
-
 class Item {
   String productID;
   int quantity;
 
-  Item({ required this.productID, required this.quantity,  });
+  Item({
+    required this.productID,
+    required this.quantity,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'productID': productID,
-      'quantity': quantity,
+      'productID': ((dynamic v) => v)(productID),
+      'quantity': ((dynamic v) => v)(quantity),
     };
   }
 
@@ -33,12 +35,15 @@ class AddItemRequest {
   String userID;
   Item item;
 
-  AddItemRequest({ required this.userID, required this.item,  });
+  AddItemRequest({
+    required this.userID,
+    required this.item,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
-      'item': item,
+      'userID': ((dynamic v) => v)(userID),
+      'item': ((dynamic v) => v.toMap())(item),
     };
   }
 
@@ -51,36 +56,37 @@ class AddItemRequest {
 
   String toJson() => json.encode(toMap());
 
-  factory AddItemRequest.fromJson(String source) => AddItemRequest.fromMap(json.decode(source));
+  factory AddItemRequest.fromJson(String source) =>
+      AddItemRequest.fromMap(json.decode(source));
 }
 
 class AddItemResponse {
-
   AddItemResponse();
 
   Map<String, dynamic> toMap() {
-    return {
-    };
+    return {};
   }
 
   factory AddItemResponse.fromMap(Map<String, dynamic> map) {
-    return AddItemResponse(
-    );
+    return AddItemResponse();
   }
 
   String toJson() => json.encode(toMap());
 
-  factory AddItemResponse.fromJson(String source) => AddItemResponse.fromMap(json.decode(source));
+  factory AddItemResponse.fromJson(String source) =>
+      AddItemResponse.fromMap(json.decode(source));
 }
 
 class GetCartRequest {
   String userID;
 
-  GetCartRequest({ required this.userID,  });
+  GetCartRequest({
+    required this.userID,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
+      'userID': ((dynamic v) => v)(userID),
     };
   }
 
@@ -92,26 +98,32 @@ class GetCartRequest {
 
   String toJson() => json.encode(toMap());
 
-  factory GetCartRequest.fromJson(String source) => GetCartRequest.fromMap(json.decode(source));
+  factory GetCartRequest.fromJson(String source) =>
+      GetCartRequest.fromMap(json.decode(source));
 }
 
 class Cart {
   String userID;
   List<Item> items;
 
-  Cart({ required this.userID, required this.items,  });
+  Cart({
+    required this.userID,
+    required this.items,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
-      'items': items,
+      'userID': ((dynamic v) => v)(userID),
+      'items': ((dynamic v) =>
+          v.map((v) => Item.fromMap(v)).cast<Item>().toList())(items),
     };
   }
 
   factory Cart.fromMap(Map<String, dynamic> map) {
     return Cart(
       userID: ((dynamic v) => v)(map['userID']),
-      items: ((dynamic v) => v.map((v) => Item.fromMap(v)).cast<Item>().toList())(map['items']),
+      items: ((dynamic v) =>
+          v.map((v) => Item.fromMap(v)).cast<Item>().toList())(map['items']),
     );
   }
 
@@ -123,11 +135,13 @@ class Cart {
 class EmptyCartRequest {
   String userID;
 
-  EmptyCartRequest({ required this.userID,  });
+  EmptyCartRequest({
+    required this.userID,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
+      'userID': ((dynamic v) => v)(userID),
     };
   }
 
@@ -139,37 +153,34 @@ class EmptyCartRequest {
 
   String toJson() => json.encode(toMap());
 
-  factory EmptyCartRequest.fromJson(String source) => EmptyCartRequest.fromMap(json.decode(source));
+  factory EmptyCartRequest.fromJson(String source) =>
+      EmptyCartRequest.fromMap(json.decode(source));
 }
 
 class EmptyCartResponse {
-
   EmptyCartResponse();
 
   Map<String, dynamic> toMap() {
-    return {
-    };
+    return {};
   }
 
   factory EmptyCartResponse.fromMap(Map<String, dynamic> map) {
-    return EmptyCartResponse(
-    );
+    return EmptyCartResponse();
   }
 
   String toJson() => json.encode(toMap());
 
-  factory EmptyCartResponse.fromJson(String source) => EmptyCartResponse.fromMap(json.decode(source));
+  factory EmptyCartResponse.fromJson(String source) =>
+      EmptyCartResponse.fromMap(json.decode(source));
 }
-
 
 class CartClient {
   final FTLHttpClient ftlClient;
 
   CartClient({required this.ftlClient});
 
-
   Future<AddItemResponse> addItem(AddItemRequest request) async {
-    final response = await ftlClient.post('/cart/add');
+    final response = await ftlClient.post('/cart/add', body: request.toJson());
     if (response.statusCode == 200) {
       return AddItemResponse.fromJson(response.body);
     } else {
@@ -187,7 +198,7 @@ class CartClient {
   }
 
   Future<EmptyCartResponse> emptyCart(EmptyCartRequest request) async {
-    final response = await ftlClient.post('/cart/empty');
+    final response = await ftlClient.post('/cart/empty', body: request.toMap());
     if (response.statusCode == 200) {
       return EmptyCartResponse.fromJson(response.body);
     } else {
