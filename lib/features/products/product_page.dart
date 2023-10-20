@@ -14,6 +14,7 @@ class ProductPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isAdding = useState(false);
+    final quantity = useState(1);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,24 +69,46 @@ class ProductPage extends HookConsumerWidget {
                   ),
                 ),
               ),
-              if (isAdding.value)
-                const Center(child: CircularProgressIndicator()),
-              if (!isAdding.value)
-                ElevatedButton(
-                  onPressed: () {
-                    isAdding.value = true;
-                    CartClient(ftlClient: FTLHttpClient.instance)
-                        .addItem(AddItemRequest(
-                      userID: 'a',
-                      item: Item(productID: product.id, quantity: 1),
-                    ))
-                        .then((value) {
-                      isAdding.value = false;
-                    });
-                    refreshCartCount(ref);
-                  },
-                  child: const Text('Add to Cart'),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Quantity:'),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (quantity.value > 1) {
+                            quantity.value--;
+                          }
+                        },
+                        icon: const Icon(Icons.remove),
+                      ),
+                      Text(quantity.value.toString()),
+                      IconButton(
+                        onPressed: () {
+                          quantity.value++;
+                        },
+                        icon: const Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  isAdding.value = true;
+                  CartClient(ftlClient: FTLHttpClient.instance)
+                      .addItem(AddItemRequest(
+                    userID: 'a',
+                    item: Item(productID: product.id, quantity: quantity.value),
+                  ))
+                      .then((value) {
+                    refreshCart(ref);
+                    isAdding.value = false;
+                  });
+                },
+                child: const Text('Add to Cart'),
+              ),
             ],
           ),
         ),

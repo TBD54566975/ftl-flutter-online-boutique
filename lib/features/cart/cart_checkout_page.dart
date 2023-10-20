@@ -155,18 +155,14 @@ class CartCheckoutPage extends HookConsumerWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // TODO: Process payment
-                        }
+                        if (_formKey.currentState!.validate()) {}
                       },
                       child: const Text('Submit'),
                     ),
                     const Spacer(),
                     ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // TODO: Process payment
-                        }
+                        if (_formKey.currentState!.validate()) {}
                       },
                       child: const Text('Prefill'),
                     ),

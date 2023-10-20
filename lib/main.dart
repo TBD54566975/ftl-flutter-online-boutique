@@ -15,6 +15,7 @@ void main() {
     baseUrl: host,
     httpClient: http.Client(),
   );
+
   runApp(const ProviderScope(child: App()));
 }
 
