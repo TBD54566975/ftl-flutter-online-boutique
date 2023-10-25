@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:online_boutique/api/cart.dart';
-import 'package:online_boutique/api/ftl_client.dart';
 import 'package:online_boutique/api/productcatalog.dart';
 import 'package:online_boutique/features/cart/cart_button.dart';
 import 'package:online_boutique/features/cart/cart_providers.dart';
@@ -97,15 +95,13 @@ class ProductPage extends HookConsumerWidget {
               ElevatedButton(
                 onPressed: () {
                   isAdding.value = true;
-                  CartClient(ftlClient: FTLHttpClient.instance)
-                      .addItem(AddItemRequest(
-                    userID: 'a',
-                    item: Item(productID: product.id, quantity: quantity.value),
-                  ))
-                      .then((value) {
-                    refreshCart(ref);
-                    isAdding.value = false;
-                  });
+                  ref
+                      .read(cartProvider.notifier)
+                      .addItem(
+                        productId: product.id,
+                        quantity: quantity.value,
+                      )
+                      .then((value) => isAdding.value = false);
                 },
                 child: const Text('Add to Cart'),
               ),
