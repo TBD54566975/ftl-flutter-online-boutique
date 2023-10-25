@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:online_boutique/api/ftl_client.dart';
 import 'package:online_boutique/features/home/home_page.dart';
-import 'package:openapi_generator_annotations/openapi_generator_annotations.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -19,13 +18,6 @@ void main() {
   runApp(const ProviderScope(child: App()));
 }
 
-@Openapi(
-  inputSpecFile: 'openapi.yaml',
-  generatorName: Generator.dart,
-  runSourceGenOnOutput: true,
-  useNextGen: true,
-  outputDirectory: 'lib/api',
-)
 class App extends StatelessWidget {
   const App({super.key});
 

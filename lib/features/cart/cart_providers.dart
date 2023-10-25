@@ -1,25 +1,49 @@
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:online_boutique/api/cart.dart';
 import 'package:online_boutique/api/ftl_client.dart';
 
-final cartProvider = StateProvider<Cart>((ref) => Cart(userID: 'a', items: []));
-final cartCountProvider = StateProvider<int>(
-  (ref) =>
-      ref.watch(cartProvider).items.fold(0, (sum, item) => sum + item.quantity),
-);
+final cartProvider =
+    AsyncNotifierProvider<CartNotifier, Cart>(() => CartNotifier());
 
-Future<void> refreshCart(WidgetRef ref) async {
-  CartClient(ftlClient: FTLHttpClient.instance)
-      .getCart(GetCartRequest(userID: 'a'))
-      .then((value) {
-    ref.read(cartProvider.notifier).state = value;
-  });
-}
+final cartCountProvider = Provider<int>((ref) =>
+    ref
+        .watch(cartProvider)
+        .asData
+        ?.value
+        .items
+        .fold(0, (sum, item) => (sum ?? 0) + item.quantity) ??
+    0);
 
-Future<void> emptyCart(WidgetRef ref) async {
-  CartClient(ftlClient: FTLHttpClient.instance)
-      .emptyCart(EmptyCartRequest(userID: 'a'))
-      .then((value) {
-    refreshCart(ref);
-  });
+class CartNotifier extends AsyncNotifier<Cart> {
+  @override
+  FutureOr<Cart> build() async {
+    return getCart();
+  }
+
+  Future<void> addItem({
+    required String productId,
+    required int quantity,
+  }) async {
+    CartClient(ftlClient: FTLHttpClient.instance)
+        .addItem(AddItemRequest(
+          userID: 'a',
+          item: Item(productID: productId, quantity: quantity),
+        ))
+        .then((value) => getCart());
+  }
+
+  Future<Cart> getCart() async {
+    final cart = await CartClient(ftlClient: FTLHttpClient.instance)
+        .getCart(GetCartRequest(userID: 'a'));
+    state = AsyncData(cart);
+    return cart;
+  }
+
+  Future<void> emptyCart() async {
+    CartClient(ftlClient: FTLHttpClient.instance)
+        .emptyCart(EmptyCartRequest(userID: 'a'))
+        .then((value) => getCart());
+  }
 }

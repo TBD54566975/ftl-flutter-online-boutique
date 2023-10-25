@@ -9,8 +9,7 @@ class CartPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cart = ref.watch(cartProvider);
-    final products = ref.watch(productsProvider);
+    final products = ref.watch(productsProvider).asData?.value ?? [];
     final cartCount = ref.watch(cartCountProvider);
 
     return Scaffold(
@@ -24,25 +23,31 @@ class CartPage extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: cart.items.length,
-                  itemBuilder: (context, index) {
-                    final item = cart.items[index];
-                    final product =
-                        products.firstWhere((p) => p.id == item.productID);
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ListTile(
-                        leading: Image.network(
-                          product.picture,
-                          fit: BoxFit.cover,
-                        ),
-                        title: Text(product.name),
-                        trailing: Text('${item.quantity}'),
+                child: ref.watch(cartProvider).when(
+                      data: (cart) => ListView.builder(
+                        itemCount: cart.items.length,
+                        itemBuilder: (context, index) {
+                          final item = cart.items[index];
+                          final product = products
+                              .firstWhere((p) => p.id == item.productID);
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ListTile(
+                              leading: Image.network(
+                                product.picture,
+                                fit: BoxFit.cover,
+                              ),
+                              title: Text(product.name),
+                              trailing: Text('${item.quantity}'),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
+                      error: (error, stackTrace) =>
+                          Center(child: Text(error.toString())),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                    ),
               ),
               Column(
                 children: [
@@ -58,7 +63,8 @@ class CartPage extends HookConsumerWidget {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () => emptyCart(ref),
+                            onPressed: () =>
+                                ref.read(cartProvider.notifier).emptyCart(),
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Theme.of(context).colorScheme.error,
