@@ -23,66 +23,69 @@ class HomePage extends HookConsumerWidget {
         title: const Text('Product Catalog'),
         actions: const [CartButton()],
       ),
-      body: SafeArea(
-        child: ref.watch(productsProvider).when(
-              data: (products) => GridView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: products.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2 / 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
-                itemBuilder: (ctx, i) {
-                  final product = products[i];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductPage(product: product),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Image.network(
-                              product.picture,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            product.name,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '\$${fromMoney(product.priceUSD)}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
+      body: ref.watch(productsProvider).when(
+            data: (products) => GridView.builder(
+              padding: EdgeInsets.only(
+                left: 8,
+                right: 8,
+                top: 8,
+                bottom: MediaQuery.of(context).padding.bottom + 8,
+              ),
+              itemCount: products.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 2 / 3,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemBuilder: (ctx, i) {
+                final product = products[i];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductPage(product: product),
                       ),
+                    );
+                  },
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Image.network(
+                            product.picture,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          product.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          '\$${fromMoney(product.priceUSD)}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
                     ),
-                  );
-                },
-              ),
-              error: (error, stack) => Text('Error: $error'),
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
+                  ),
+                );
+              },
             ),
-      ),
+            error: (error, stack) => Text('Error: $error'),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
     );
   }
 }
