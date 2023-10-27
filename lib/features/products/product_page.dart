@@ -54,11 +54,7 @@ class ProductPage extends HookConsumerWidget {
                           Wrap(
                             spacing: 8.0,
                             children: product.categories.map((category) {
-                              return Chip(
-                                label: Text(category),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.background,
-                              );
+                              return Chip(label: Text(category));
                             }).toList(),
                           ),
                         ],
@@ -101,7 +97,12 @@ class ProductPage extends HookConsumerWidget {
                         productId: product.id,
                         quantity: quantity.value,
                       )
-                      .then((value) => isAdding.value = false);
+                      .then((value) {
+                    isAdding.value = false;
+
+                    const snackBar = SnackBar(content: Text('Added to cart!'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  });
                 },
                 child: const Text('Add to Cart'),
               ),
